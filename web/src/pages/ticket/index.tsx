@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 
 export default function index() {
     return (
-        <div className="bg-black h-screen">
+        <div className="bg-black h-screen relative">
             <Navbar />
             <div className="flex gap-12 p-12">
                 <div className="rounded-xl border-1 border-gray-800 p-4 flex flex-col gap-4">
