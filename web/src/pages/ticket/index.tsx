@@ -1,5 +1,6 @@
 import CustomDropdown from "@/components/CustomDropdown";
 import Navbar from "@/components/Navbar";
+import Selector from "@/components/Selector";
 
 export default function index() {
     return (
@@ -51,8 +52,8 @@ export default function index() {
                             </select>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <p className="text-white">Email of PIC</p>
-                            <input placeholder="jamesgunn@gmail.com" className=" font-light text-gray-200 bg-gray-800 py-1 px-3 rounded-md border-1 border-gray-600 outline-none"/>
+                            <p className="text-white">Assigned To</p>
+                            <Selector />
                         </div>
                     </div>
                     <div className="flex justify-between mt-2">
