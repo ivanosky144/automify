@@ -12,7 +12,7 @@ export default function Navbar() {
       : "text-gray-300 hover:text-white cursor-pointer";
 
   return (
-    <div className="py-5 px-12 flex items-center justify-between bg-black border-b border-gray-800 relative z-40">
+    <div className="fixed top-0 left-0 w-full py-5 px-12 flex items-center justify-between bg-black border-b border-gray-800 z-50">
       <h2 className="text-white font-semibold text-2xl">Automify</h2>
       <div className="flex gap-12">
         <p className={getLinkClass("/ticket")} onClick={() => router.push("/ticket")}>
@@ -38,8 +38,8 @@ export default function Navbar() {
               <p className="text-gray-400 text-sm">username@gmail.com</p>
             </div>
             <div className="px-2 mt-2 flex flex-col gap-1">
-              <div className="px-1 py-1 text-white hover:bg-gray-800 text-sm cursor-pointer cursor-pointer rounded-md">Dashboard</div>
-              <div className="px-1 py-1 text-white hover:bg-gray-800 text-sm cursor-pointer cursor-pointer rounded-md">Account Setting</div>
+              <div className="px-1 py-1 text-white hover:bg-gray-800 text-sm cursor-pointer rounded-md">Dashboard</div>
+              <div className="px-1 py-1 text-white hover:bg-gray-800 text-sm cursor-pointer rounded-md">Account Setting</div>
               <button className="px-1 py-1 text-center text-black bg-white rounded-md cursor-pointer hover:bg-gray-100 mt-2 text-sm font-medium">Log Out</button>
             </div>
           </div>
@@ -47,4 +47,5 @@ export default function Navbar() {
       </div>
     </div>
   );
-};
+}
+

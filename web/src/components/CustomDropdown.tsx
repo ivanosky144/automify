@@ -1,0 +1,46 @@
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
+
+const clients = [
+    { name: "Thomas Andre", company: "Gojek" },
+    { name: "Sung Jin Woo", company: "Solo Leveling" },
+    { name: "Liu Zhigang", company: "Tencent" },
+];
+
+export default function CustomDropdown() {
+    const [selectedClient, setSelectedClient] = useState(clients[0]);
+    const [open, setOpen] = useState(false);
+
+    return (
+        <div className="relative w-full">
+            <button 
+                className="bg-gray-800 text-white w-full py-2 px-3 rounded-md border border-gray-600 flex justify-between items-center"
+                onClick={() => setOpen(!open)}
+            >
+                <div className="flex justify-between items-center gap-4">
+                    <span>{selectedClient.name}</span>
+                    <span className="text-xs text-gray-800 bg-white py-0.5 px-1 rounded-lg font-medium">{selectedClient.company}</span>
+                </div>
+                <ChevronDown className="w-4 h-4 text-gray-400" />
+            </button>
+
+            {open && (
+                <div className="absolute w-full mt-1 bg-gray-800 rounded-md border border-gray-600 shadow-lg">
+                    {clients.map((client, index) => (
+                        <div 
+                            key={index} 
+                            className="p-2 cursor-pointer hover:bg-gray-700 flex justify-between items-center"
+                            onClick={() => {
+                                setSelectedClient(client);
+                                setOpen(false);
+                            }}
+                        >
+                            <span className="text-white">{client.name}</span>
+                            <span className="text-gray-300 text-xs">{client.company}</span>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
