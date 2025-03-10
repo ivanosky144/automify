@@ -1,4 +1,15 @@
+import { Bounce, ToastContainer, toast } from "react-toastify";
+
 export default function index() {
+
+    const notify = () => toast('You are registered as new user', {
+        position: 'top-right',
+        autoClose: 5000,
+        closeOnClick: true,
+        theme: "dark",
+        transition: Bounce,
+    });
+
     return (
         <div className="bg-black h-screen flex justify-center items-center">
             <div className="rounded-lg bg-gray-900 py-4 px-5">
@@ -22,6 +33,7 @@ export default function index() {
                     <button className="text-gray-400 font-semibold text-md px-3 py-2 rounded-md bg-gray-800 shadow-sm cursor-pointer w-full hover:bg-gray-700 mt-3">Login with your account</button>
                 </form>
             </div>
+            <ToastContainer/>
         </div>
     );
 };
