@@ -53,14 +53,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await loginUser(payload);
-
-      if (!response.ok) {
-        const errorData = await response.json(); 
-        throw new Error(errorData.message || 'Login failed');
-      }
-
-      const data = await response.json(); 
-      const { token } = data;
+      const { access_token : token } = response;
       const decodedToken: any = jwtDecode(token);
 
       set({ 
