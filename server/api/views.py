@@ -80,16 +80,16 @@ def client_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def client_detail(request, pk):
-    client = get_object_or_404(Client, pk=pk)
+def client_detail(request, id):
+    client = get_object_or_404(Client, pk=id)
     if request.method == "GET":
         serializer = ClientSerializer(client)
-        return Response({"message": "Client data retrieved successfully", "data": serializer.data})
+        return Response({"message": "Client data retrieved successfully", "data": serializer.data}, status=status.HTTP_200_OK)
     elif request.method == "PUT":
         serializer = ClientSerializer(client, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Client data updated successfully"})
+            return Response({"message": "Client data updated successfully"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == "DELETE":
         client.delete()
@@ -111,8 +111,8 @@ def request_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def request_detail(request, pk):
-    req_obj = get_object_or_404(Request, pk=pk)
+def request_detail(request, id):
+    req_obj = get_object_or_404(Request, pk=id)
     if request.method == "GET":
         serializer = RequestSerializer(req_obj)
         return Response({"message": "Request data retrieved successfully", "data": serializer.data})
