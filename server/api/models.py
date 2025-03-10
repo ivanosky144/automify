@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.conf import settings
 
 class CustomUser(AbstractUser):
     role = models.CharField(max_length=100, default='Staff')
@@ -38,7 +39,11 @@ class Request(models.Model):
     status = models.CharField(max_length=255, choices=STATUS_CHOICES, default='Pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
-    assigned_users = models.ManyToManyField(User, blank=True, related_name='assigned_requests')
-
+    assigned_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name='assigned_requests'
+    )
+    
     def __str__(self):
         return self.title

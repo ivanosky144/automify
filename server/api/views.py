@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .serializers import UserSerializer, ClientSerializer, RequestSerializer
-from .models import User, Request, Client
+from .models import Request, Client, CustomUser
 import requests
 import os 
 
@@ -17,10 +17,11 @@ ZAPIER_WEBHOOK_URL = os.getenv('ZAPIER_WEBHOOK_URL')
 def user_register(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
-        user = User.objects.create_user(
+        user = CustomUser.objects.create_user(
             username=serializer.validated_data["username"],
             email=serializer.validated_data["email"],
             password=serializer.validated_data["password"],
+            role=serializer.validated_data["role"]
         )
         return Response({
             "message": "User registered successfully",
