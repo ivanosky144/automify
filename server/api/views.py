@@ -7,6 +7,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 from .serializers import UserSerializer, ClientSerializer, RequestSerializer
 from .models import User, Request, Client
+import requests
+import os 
+
+ZAPIER_WEBHOOK_URL = os.getenv('ZAPIER_WEBHOOK_URL')
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -99,13 +103,17 @@ def client_detail(request, id):
 @permission_classes([IsAuthenticated])
 def request_list(request):
     if request.method == "GET":
-        requests = Request.objects.all()
-        serializer = RequestSerializer(requests, many=True)
+        requests_list = Request.objects.all()
+        serializer = RequestSerializer(requests_list, many=True)
         return Response({"message": "Request data retrieved successfully", "data": serializer.data})
     elif request.method == "POST":
         serializer = RequestSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            try: 
+                requests.post(ZAPIER_WEBHOOK_URL, json=serializer.data)
+            except Exception as er:
+                print("Error sending webhook", e)
             return Response({"message": "Request data has been created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
