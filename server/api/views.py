@@ -47,14 +47,14 @@ def user_login(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_users(request):
-    users = User.objects.all()
+    users = CustomUser.objects.all()
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def user_detail(request, id):
-    user = get_object_or_404(User, pk=id)
+    user = get_object_or_404(CustomUser, pk=id)
     if request.method == "GET":
         serializer = UserSerializer(user)
         return Response({"message": "User data retrieved successfully", "data": serializer.data})
@@ -114,7 +114,7 @@ def request_list(request):
             try: 
                 requests.post(ZAPIER_WEBHOOK_URL, json=serializer.data)
             except Exception as er:
-                print("Error sending webhook", e)
+                print("Error sending webhook", er)
             return Response({"message": "Request data has been created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

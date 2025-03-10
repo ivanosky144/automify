@@ -42,8 +42,21 @@ class Request(models.Model):
     assigned_users = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         blank=True,
-        related_name='assigned_requests'
+        related_name='assigned_requests',
+        through='RequestAssignedUser'
     )
     
     def __str__(self):
         return self.title
+
+class RequestAssignedUser(models.Model):
+    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        db_column='customuser_id'
+    )
+
+    class Meta:
+        db_table = 'api_request_assigned_users'
+        unique_together = ('request', 'user')

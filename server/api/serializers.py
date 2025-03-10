@@ -21,6 +21,16 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "email", "company", "created_at", "updated_at"]
 
 class RequestSerializer(serializers.ModelSerializer):
+    client_id = serializers.PrimaryKeyRelatedField(
+        source='client',
+        queryset=Client.objects.all()
+    )
+
+    assigned_users = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=User.objects.all()
+    )
+
     class Meta:
         model = Request
-        fields = ["id", "title", "description", "status", "priority", "created_at", "updated_at"]
+        fields = ["id", "title", "description", "status", "priority", "client_id", "assigned_users", "created_at", "updated_at"]
