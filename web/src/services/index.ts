@@ -1,4 +1,4 @@
-const API_KEY = "http://3.25.103.16:3200"
+const API_KEY = process.env.NEXT_PUBLIC_API_URL
 
 export function getToken() {
     if (typeof window !== 'undefined') {

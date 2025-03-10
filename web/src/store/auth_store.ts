@@ -1,17 +1,11 @@
 import { create } from 'zustand';
-import { jwtDecode, JwtPayload } from "jwt-decode"
-import { registerUser, loginUser } from '@/services/user_service';
-
+import { jwtDecode } from 'jwt-decode'; 
+import { loginUser } from '@/services/user_service';
 
 interface User {
   email: string;
   token: string;
   id: number | undefined;
-}
-
-interface JwtCustomPayload extends JwtPayload {
-  id: number
-  email: string
 }
 
 interface AuthState {
@@ -24,66 +18,92 @@ interface AuthState {
   register: (payload: any) => Promise<void>;
 }
 
+const isTokenValid = (token: string): boolean => {
+  try {
+    const decodedToken: any = jwtDecode(token);
+    return decodedToken.exp * 1000 > Date.now();
+  } catch {
+    return false;
+  }
+}
 
-const useAuthStore = create<AuthState>((set) => {
+interface User {
+  email: string;
+  token: string;
+  id: number | undefined;
+}
 
-    const token = localStorage.getItem("token");
-    let initialUser: User | null = null;
-    let initialIsLoggedIn = false;
+interface AuthState {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
+  isLoggedIn: boolean;
+  login: (payload: any) => Promise<void>;
+  logout: () => void;
+  register: (payload: any) => Promise<void>;
+}
 
-    if (token) {
-      try {
-        const decodedToken =jwtDecode<JwtCustomPayload>(token);
-        initialUser = { email: decodedToken.email, token, id: decodedToken.id };
-        initialIsLoggedIn = true;
-      } catch(err) {
-        console.log("Error decoding token", err);
-        localStorage.removeItem("token");
+const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
+  loading: false,
+  error: null,
+  isLoggedIn: false,
+
+  login: async (payload: any) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await loginUser(payload);
+
+      if (!response.ok) {
+        const errorData = await response.json(); 
+        throw new Error(errorData.message || 'Login failed');
       }
+
+      const data = await response.json(); 
+      const { token } = data;
+      const decodedToken: any = jwtDecode(token);
+
+      set({ 
+        user: { email: payload.email, token, id: decodedToken._id }, 
+        loading: false, 
+        isLoggedIn: true 
+      });
+
+      localStorage.setItem('token', token); 
+    } catch (error: any) {
+      set({ loading: false, error: error.message });
     }
+  },
 
-    return {
-      user: initialUser,
-      loading: false,
-      error: null,
-      isLoggedIn: initialIsLoggedIn,
-    
-      login: async (payload: any) => {
-        set({ loading: true, error: null });
-        try {
-          const response = await loginUser(payload);
-          const { token } = response;
-          const decodedToken = jwtDecode<JwtCustomPayload>(token);
-          set({ user: { email: payload.email, token, id: decodedToken.id }, loading: false, isLoggedIn: true });
-          localStorage.setItem('token', token);
-        } catch (error: any) {
-          set({ loading: false, error: error.message });
-        }
-      },
-    
-      logout: () => {
-        set({ user: null, isLoggedIn: false });
-        localStorage.removeItem('token');
-      },
-    
-      register: async (payload: any) => {
-        set({ loading: true, error: null });
-        try {
-          const response = await registerUser(payload);
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.detail || 'Registration failed');
-          }
-          set({ loading: false });
-        } catch (error: any) {
-          set({ loading: false, error: error.message });
-        }
-      },
+  logout: () => {
+    set({ user: null, isLoggedIn: false });
+    localStorage.removeItem('token');
+  },
 
+  register: async (payload: any) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json", 
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json(); 
+
+      if (!response.ok) {
+        throw new Error(data.detail || 'Registration failed');
+      }
+
+      set({ loading: false });
+    } catch (error: any) {
+      set({ loading: false, error: error.message });
     }
+  },
+}));
 
-  
-  });
-  
-  export default useAuthStore;
+export default useAuthStore;
+
 
