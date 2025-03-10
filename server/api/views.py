@@ -9,6 +9,7 @@ from .serializers import UserSerializer, ClientSerializer, RequestSerializer
 from .models import Request, Client, CustomUser
 import requests
 import os 
+import json
 
 ZAPIER_WEBHOOK_URL = os.getenv('ZAPIER_WEBHOOK_URL')
 
@@ -111,8 +112,9 @@ def request_list(request):
         serializer = RequestSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            payload = json.dumps(serializer.data, default=str)
             try: 
-                requests.post(ZAPIER_WEBHOOK_URL, json=serializer.data)
+                requests.post(ZAPIER_WEBHOOK_URL, data=payload, headers={'Content-Type': 'application/json'})
             except Exception as er:
                 print("Error sending webhook", er)
             return Response({"message": "Request data has been created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)

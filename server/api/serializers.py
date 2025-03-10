@@ -34,3 +34,17 @@ class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
         fields = ["id", "title", "description", "status", "priority", "client_id", "assigned_users", "created_at", "updated_at"]
+    
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep["assigned_users"] = [
+            {
+                "id": str(user.id),
+                "username": user.username,
+                "email": user.email,
+                "role": user.role,
+            } for user in instance.assigned_users.all()
+        ]
+        rep["client"] = ClientSerializer(instance.client).data
+        rep.pop("client_id", None)
+        return rep
