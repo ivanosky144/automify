@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import "../app/globals.css";
+import { ToastContainer } from "react-toastify";
  
 
 const inter = Inter({
@@ -17,6 +18,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             </Head>
             <main className={inter.className}>
                 <Component {...pageProps} />
+                <ToastContainer />
             </main>
         </>
     )

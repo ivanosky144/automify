@@ -1,31 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { getUsers } from "@/services/user_service";
 
 interface User {
   id: number;
-  name: string;
+  username: string;
+  email: string;
   role: string;
 }
 
-const users: User[] = [
-  { id: 1, name: "Jonathan Harjanto", role: "Software Engineer" },
-  { id: 2, name: "Muhammad Rifky", role: "Product Manager" },
-  { id: 3, name: "Anita Rae", role: "Data Engineer" },
-  { id: 4, name: "Jessica Tjahaya", role: "UI UX Designer" },
-  { id: 5, name: "Ali Husaini", role: "Mobile Engineer" },
-];
+interface SelectorProps {
+  onUserSelect: (selectedUsers: number[]) => void;
+}
 
-export default function Selector() {
+export default function Selector({ onUserSelect }: SelectorProps) {
+  const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [open, setOpen] = useState<boolean>(false);
 
   const toggleUser = (user: User) => {
-    if (selectedUsers.some((u) => u.id === user.id)) {
-      setSelectedUsers(selectedUsers.filter((u) => u.id !== user.id));
-    } else {
-      setSelectedUsers([...selectedUsers, user]);
-    }
+    const updatedSelectedUsers = selectedUsers.some((u) => u.id === user.id)
+      ? selectedUsers.filter((u) => u.id !== user.id)
+      : [...selectedUsers, user];
+
+    setSelectedUsers(updatedSelectedUsers);
+    const selectedUserIds = updatedSelectedUsers.map((u) => u.id);
+    onUserSelect(selectedUserIds);
   };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await getUsers();
+        if (response) {
+          setUsers(response);
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   return (
     <div className="relative w-full">
@@ -42,7 +58,7 @@ export default function Selector() {
                 key={user.id}
                 className="text-xs text-gray-800 bg-white py-0.5 px-1 rounded-lg font-medium"
               >
-                {user.name}
+                {user.username}
               </span>
             ))
           )}
@@ -61,7 +77,7 @@ export default function Selector() {
                 }`}
                 onClick={() => toggleUser(user)}
               >
-                <span className="text-white">{user.name}</span>
+                <span className="text-white">{user.username}</span>
                 <span className="text-gray-300 text-xs">{user.role}</span>
               </div>
             );

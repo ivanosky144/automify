@@ -21,7 +21,7 @@ export async function registerUser(payload: any) {
 }
 
 export async function getUserDetail(id: number) {
-    const res = await fetch(`${API_KEY}/api/user/${id}`, {
+    const res = await fetch(`${API_KEY}/api/users/${id}`, {
         method: 'GET',
         headers: getAuthHeaders(),
     });
@@ -41,6 +41,14 @@ export async function updateUser(id: number, payload: any) {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify(payload)
+    });
+    return res.json();
+}
+
+export async function getUsers() {
+    const res = await fetch(`${API_KEY}/api/users`, {
+        method: 'GET',
+        headers: getAuthHeaders(),
     });
     return res.json();
 }

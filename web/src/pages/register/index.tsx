@@ -73,6 +73,7 @@ export default function index() {
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
+                                type="password"
                             />
                         </div>  
                     </div>

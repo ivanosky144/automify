@@ -27,7 +27,7 @@ export async function updateClient(id: number, payload: any) {
 }
 
 export async function getClients() {
-    const res = await fetch(`${API_KEY}/api/posts`, {
+    const res = await fetch(`${API_KEY}/api/clients`, {
         method: 'GET',
         headers: getAuthHeaders(),
     });

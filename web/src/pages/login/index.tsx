@@ -61,6 +61,7 @@ export default function index() {
                                 placeholder="Your password..." 
                                 className=" font-light text-gray-200 bg-gray-800 py-1 px-3 rounded-md border-1 border-gray-600 outline-none"
                                 name="password"
+                                type="password"
                                 value={formData.password}
                                 onChange={handleChange}
                             />
