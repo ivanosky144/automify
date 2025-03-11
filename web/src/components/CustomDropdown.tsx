@@ -41,7 +41,7 @@ export default function CustomDropdown({ onClientSelect } : DropdownProps) {
     };
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-full z-20">
             <button 
                 className="bg-gray-800 text-white w-full py-2 px-3 rounded-md border border-gray-600 flex justify-between items-center"
                 onClick={() => setOpen(!open)}

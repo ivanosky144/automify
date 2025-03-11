@@ -13,7 +13,7 @@ export default function index() {
         email: "",
         company: "",
     });
-
+    const [isPopoutVisible, setPopoutVisible] = useState(false);
     const [requestData, setRequestData] = useState({
         title: "",
         description: "",
@@ -53,6 +53,7 @@ export default function index() {
         try {
             await addRequest(requestData);
             requestNotify();
+            setPopoutVisible(true);
         } catch (err) {
             console.log("Error: ", err);
         }
@@ -92,6 +93,21 @@ export default function index() {
     return (
         <div className="bg-black min-h-screen relative pt-20">
             <Navbar />
+            {isPopoutVisible && (
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-800/70 bg-opacity-70 z-99">
+                    <div className="bg-black p-6 rounded-md shadow-lg">
+                        <img src="assets/trello_board.png" className="w-160 h-80" />
+                        <div className="flex justify-center mt-4">
+                            <button
+                                className="bg-white px-4 py-2 font-semibold shadow-md rounded-md cursor-pointer bg-gray-100"
+                                onClick={() => setPopoutVisible(false)}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="flex gap-12 p-12">
                 <form className="rounded-xl border-1 border-gray-800 p-4 flex flex-col gap-4" onSubmit={handleAddClient}>
                     <h2 className="text-white text-xl">Client Information</h2>
