@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { getClients } from "@/services/client_service";
 
@@ -18,6 +18,7 @@ export default function CustomDropdown({ onClientSelect } : DropdownProps) {
     const [clients, setClients] = useState<Client[]>([]);
     const [selectedClient, setSelectedClient] = useState(clients[0]);
     const [open, setOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchClients = async () => {
@@ -25,6 +26,7 @@ export default function CustomDropdown({ onClientSelect } : DropdownProps) {
             const response = await getClients();
             if (response && response.data) {
               setClients(response.data);
+              setSelectedClient(response.data[0] || null);
             }
           } catch (error) {
             console.error("Error fetching clients:", error);
@@ -33,6 +35,18 @@ export default function CustomDropdown({ onClientSelect } : DropdownProps) {
     
         fetchClients();
       }, []);
+
+      useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const handleSelect = (client : any) => {
         setSelectedClient(client);
@@ -44,6 +58,7 @@ export default function CustomDropdown({ onClientSelect } : DropdownProps) {
         <div className="relative w-full z-20">
             <button 
                 className="bg-gray-800 text-white w-full py-2 px-3 rounded-md border border-gray-600 flex justify-between items-center"
+                type="button"
                 onClick={() => setOpen(!open)}
             >
                 <div className="flex justify-between items-center gap-4">

@@ -51,9 +51,11 @@ export default function index() {
     const handleAddRequest = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await addRequest(requestData);
-            requestNotify();
-            setPopoutVisible(true);
+            const response = await addRequest(requestData);  
+            if (response.data) {
+                requestNotify();
+                setPopoutVisible(true);
+            }
         } catch (err) {
             console.log("Error: ", err);
         }
