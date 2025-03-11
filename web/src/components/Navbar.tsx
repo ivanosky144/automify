@@ -40,7 +40,7 @@ export default function Navbar() {
             <div className="px-2 mt-2 flex flex-col gap-1">
               <div className="px-1 py-1 text-white hover:bg-gray-800 text-sm cursor-pointer rounded-md">Dashboard</div>
               <div className="px-1 py-1 text-white hover:bg-gray-800 text-sm cursor-pointer rounded-md">Account Setting</div>
-              <button className="px-1 py-1 text-center text-black bg-white rounded-md cursor-pointer hover:bg-gray-100 mt-2 text-sm font-medium">Log Out</button>
+              <button className="px-1 py-1 text-center text-black bg-white rounded-md cursor-pointer hover:bg-gray-100 mt-2 text-sm font-medium" onClick={() => router.push("/login")}>Log Out</button>
             </div>
           </div>
         )}
