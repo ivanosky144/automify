@@ -9,6 +9,7 @@ export default function index() {
         username: "",
         email: "",
         password: "",
+        role: "",
     });
     const router = useRouter();
 
@@ -62,6 +63,16 @@ export default function index() {
                                 className=" font-light text-gray-200 bg-gray-800 py-1 px-3 rounded-md border-1 border-gray-600 outline-none"
                                 name="email"
                                 value={formData.email}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <p className="text-white">Role</p>
+                            <input 
+                                placeholder="Your role..." 
+                                className=" font-light text-gray-200 bg-gray-800 py-1 px-3 rounded-md border-1 border-gray-600 outline-none"
+                                name="role"
+                                value={formData.role}
                                 onChange={handleChange}
                             />
                         </div>
